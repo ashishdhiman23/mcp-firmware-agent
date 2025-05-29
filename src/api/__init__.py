@@ -1,4 +1,4 @@
-"""FastAPI server and endpoints for firmware log analysis."""
+"""MCP Firmware Log Analysis API module."""
 
 from .main import app
 
