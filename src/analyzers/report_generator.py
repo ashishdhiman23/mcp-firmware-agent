@@ -260,8 +260,12 @@ class ReportGenerator:
     def get_report_url(self, filepath: str) -> str:
         """Get a URL for accessing a saved report."""
         # Convert absolute path to relative URL
-        relative_path = Path(filepath).relative_to(Path.cwd())
-        return f"/{relative_path}"
+        try:
+            relative_path = Path(filepath).relative_to(self.reports_dir.parent)
+            return f"/{relative_path}"
+        except ValueError:
+            # Fallback: just use the filename
+            return f"/reports/{Path(filepath).name}"
     
     def _create_default_templates(self):
         """Create default HTML template if it doesn't exist."""

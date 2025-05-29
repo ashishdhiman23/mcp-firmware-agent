@@ -1,405 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firmware Log Analysis Report - Stack Overflow</title>
+    <title>Firmware Log Analysis Report</title>
+    <meta charset="utf-8">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            margin: 0;
             padding: 20px;
+            background-color: #f8f9fa;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
+            background-color: white;
             padding: 30px;
-            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0;
+            font-size: 2em;
         }
-        
-        .header .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-            padding: 25px;
-            border-radius: 10px;
-            background: #f8f9fa;
-            border-left: 5px solid #007bff;
-        }
-        
-        .section h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+        .meta-info {
             display: flex;
-            align-items: center;
-        }
-        
-        .section h2:before {
-            content: "🔍";
-            margin-right: 10px;
-            font-size: 1.5rem;
-        }
-        
-        .critical { border-left-color: #dc3545; }
-        .critical h2:before { content: "🚨"; }
-        
-        .warning { border-left-color: #ffc107; }
-        .warning h2:before { content: "⚠️"; }
-        
-        .info { border-left-color: #17a2b8; }
-        .info h2:before { content: "ℹ️"; }
-        
-        .success { border-left-color: #28a745; }
-        .success h2:before { content: "✅"; }
-        
-        .confidence-bar {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 20px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .confidence-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #28a745, #20c997);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .code-block {
-            background: #2d3748;
-            color: #f7fafc;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            overflow-x: auto;
-            margin: 15px 0;
-            border: 1px solid #4a5568;
-        }
-        
-        .event-timeline {
-            background: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-        
-        .event-item {
-            padding: 10px 15px;
-            margin: 5px 0;
-            border-left: 4px solid #007bff;
-            background: #f8f9fa;
-            border-radius: 0 5px 5px 0;
-        }
-        
-        .event-critical { border-left-color: #dc3545; background: #f8d7da; }
-        .event-warning { border-left-color: #ffc107; background: #fff3cd; }
-        .event-info { border-left-color: #17a2b8; background: #d1ecf1; }
-        
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .criticality-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .criticality-high {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .criticality-medium {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        .criticality-low {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 20px 0;
         }
-        
-        .metric-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #007bff;
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-        
-        .metric-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
         }
-        
-        .metric-label {
-            color: #6c757d;
-            font-size: 0.9rem;
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+            overflow-x: auto;
         }
-        
-        .recommendation {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin: 20px 0;
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
         }
-        
-        .recommendation h3 {
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-        
-        .recommendation ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .recommendation li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-        }
-        
-        .recommendation li:before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: #ffd700;
-            font-weight: bold;
-        }
-        
         .footer {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
             text-align: center;
+            color: #666;
+            font-size: 0.9em;
         }
-        
-        .timestamp {
-            color: #6c757d;
-            font-size: 0.9rem;
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔧 Firmware Log Analysis Report</h1>
-            <div class="subtitle">AI-Powered Stack Overflow Analysis</div>
-            <div class="timestamp">Generated: March 15, 2024 at 14:32:10 UTC</div>
+            <h1>Firmware Log Analysis Report</h1>
+            <div class="meta-info">
+                <span><strong>Generated:</strong> 2025-05-29 17:04:26</span>
+                
+                <span><strong>Analysis ID:</strong> 3768b321</span>
+                
+                <span class="criticality-badge criticality-high">HIGH</span>
+                <span><strong>Confidence:</strong> 95.0%</span>
+            </div>
         </div>
         
         <div class="content">
-            <div class="section critical">
-                <h2>Critical Issue Summary</h2>
-                <p><strong>Issue Type:</strong> Stack Overflow leading to Hard Fault</p>
-                <p><strong>Severity:</strong> Critical - System Crash</p>
-                <p><strong>Root Cause:</strong> Uncontrolled recursive function calls in data processing module</p>
-                
-                <div class="confidence-bar">
-                    <div class="confidence-fill" style="width: 95%;">95% Confidence</div>
-                </div>
-                
-                <div class="metrics">
-                    <div class="metric-card">
-                        <div class="metric-value">600+</div>
-                        <div class="metric-label">Recursive Calls</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">7680</div>
-                        <div class="metric-label">Stack Bytes Used</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">8192</div>
-                        <div class="metric-label">Total Stack Size</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">93.7%</div>
-                        <div class="metric-label">Stack Utilization</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section warning">
-                <h2>Technical Analysis</h2>
-                <p>The system experienced a catastrophic stack overflow due to excessive recursive calls in the <code>recursive_data_process()</code> function. The analysis reveals:</p>
-                
-                <div class="code-block">
-Stack Trace Analysis:
-#0  0x080034A2 in recursive_data_process() at data_processing.c:156
-#1  0x080034B8 in recursive_data_process() at data_processing.c:158  
-#2  0x080034B8 in recursive_data_process() at data_processing.c:158
-...
-[600+ identical recursive calls]
-                </div>
-                
-                <p><strong>Memory Layout at Fault:</strong></p>
-                <ul>
-                    <li>Stack Pointer: 0x20000100 (corrupted)</li>
-                    <li>Frame Pointer: 0x200001FC</li>
-                    <li>Program Counter: 0x080034A2</li>
-                    <li>CFSR Register: 0x00000082 (Stack overflow)</li>
-                    <li>HFSR Register: 0x40000000 (Forced hard fault)</li>
-                </ul>
-            </div>
-            
-            <div class="section info">
-                <h2>Event Timeline</h2>
-                <div class="event-timeline">
-                    <div class="event-item event-info">
-                        <strong>00:00:05.012</strong> - Stack usage: 512 bytes (normal operation)
-                    </div>
-                    <div class="event-item event-warning">
-                        <strong>00:00:06.567</strong> - Stack usage: 2048 bytes (25% - warning threshold)
-                    </div>
-                    <div class="event-item event-warning">
-                        <strong>00:00:07.234</strong> - Stack usage: 4096 bytes (50% - concerning)
-                    </div>
-                    <div class="event-item event-critical">
-                        <strong>00:00:07.678</strong> - Stack usage: 6144 bytes (75% - critical)
-                    </div>
-                    <div class="event-item event-critical">
-                        <strong>00:00:08.123</strong> - Stack usage: 7680 bytes (93.7% - imminent overflow)
-                    </div>
-                    <div class="event-item event-critical">
-                        <strong>00:00:08.567</strong> - PANIC: Stack overflow detected!
-                    </div>
-                    <div class="event-item event-critical">
-                        <strong>00:00:08.789</strong> - FATAL: Hard fault at PC=0x080034A2
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section success">
-                <h2>Root Cause Analysis</h2>
-                <p>The GPT-4 analysis identified the following sequence of events leading to the crash:</p>
-                
-                <ol>
-                    <li><strong>Trigger:</strong> Data processing task began processing sensor data</li>
-                    <li><strong>Function Call:</strong> <code>process_sensor_data()</code> called <code>recursive_data_process()</code></li>
-                    <li><strong>Recursion Bug:</strong> Function recursively calls itself without proper termination condition</li>
-                    <li><strong>Stack Growth:</strong> Each recursive call consumes ~12-15 bytes of stack space</li>
-                    <li><strong>Overflow:</strong> After 600+ calls, stack exceeds 8KB limit</li>
-                    <li><strong>Corruption:</strong> Stack pointer becomes invalid (0x20000100)</li>
-                    <li><strong>Hard Fault:</strong> CPU triggers hard fault due to invalid memory access</li>
-                </ol>
-                
-                <p><strong>Likely Code Issue:</strong></p>
-                <div class="code-block">
-// Suspected bug in data_processing.c:156
-void recursive_data_process(sensor_data_t* data) {
-    // Missing or incorrect termination condition
-    if (some_condition) {  // BUG: condition never true
-        return;
-    }
-    
-    // Process data...
-    
-    // BUG: Unconditional recursive call
-    recursive_data_process(data);  // <-- Line 158
-}
-                </div>
-            </div>
-            
-            <div class="recommendation">
-                <h3>🛠️ Recommended Actions</h3>
-                <ul>
-                    <li>Immediately review <code>recursive_data_process()</code> function in data_processing.c:156</li>
-                    <li>Fix termination condition to prevent infinite recursion</li>
-                    <li>Add recursion depth counter with maximum limit (e.g., 50 calls)</li>
-                    <li>Implement stack usage monitoring and warnings</li>
-                    <li>Consider iterative algorithm instead of recursive approach</li>
-                    <li>Add runtime stack overflow detection</li>
-                    <li>Increase stack size for data_processing_task if recursion is intentional</li>
-                    <li>Add unit tests for edge cases in data processing functions</li>
-                </ul>
-            </div>
-            
-            <div class="section info">
-                <h2>Prevention Strategies</h2>
-                <div class="code-block">
-// Recommended safe implementation:
-#define MAX_RECURSION_DEPTH 50
+            <h1>Firmware Log Analysis Report</h1>
 
-void recursive_data_process(sensor_data_t* data, int depth) {
-    // Safety check
-    if (depth > MAX_RECURSION_DEPTH) {
-        log_error("Maximum recursion depth exceeded");
-        return;
-    }
-    
-    // Proper termination condition
-    if (data->processed || data->size == 0) {
-        return;
-    }
-    
-    // Process data...
-    
-    // Safe recursive call
-    recursive_data_process(data, depth + 1);
-}
-                </div>
-                
-                <p><strong>Additional Monitoring:</strong></p>
-                <ul>
-                    <li>Implement stack watermark monitoring</li>
-                    <li>Add periodic stack usage reporting</li>
-                    <li>Use static analysis tools to detect infinite recursion</li>
-                    <li>Configure watchdog timer for data processing tasks</li>
-                </ul>
-            </div>
-            
-            <div class="section info">
-                <h2>System Impact Assessment</h2>
-                <p><strong>Affected Components:</strong></p>
-                <ul>
-                    <li>Data Processing Task (crashed)</li>
-                    <li>Task Scheduler (emergency shutdown initiated)</li>
-                    <li>Watchdog System (disabled for clean shutdown)</li>
-                    <li>Backup Memory (critical data saved before reset)</li>
-                </ul>
-                
-                <p><strong>Recovery Actions Taken:</strong></p>
-                <ul>
-                    <li>Emergency shutdown sequence executed</li>
-                    <li>Critical data saved to backup memory</li>
-                    <li>System reset initiated</li>
-                    <li>Watchdog timer properly disabled</li>
-                </ul>
-            </div>
+<p><strong>Generated:</strong> 2025-05-29 17:04:26
+<strong>Analysis ID:</strong> 3768b321</p>
+
+<h2>Executive Summary</h2>
+
+<p><strong>Criticality:</strong> HIGH
+<strong>Confidence:</strong> 95.0%
+<strong>Likely Module:</strong> data_processing.c</p>
+
+<p>The system experienced a stack overflow leading to a hard fault. This was likely caused by a recursive function in the data_processing.c module that did not have a proper base case or exit condition, causing it to consume all available stack space.</p>
+
+<h2>Recommended Actions</h2>
+
+<p>Review the recursive_data_process() function in data_processing.c, specifically lines 156 and 158. Ensure there is a proper base case or exit condition to prevent infinite recursion. Consider implementing iterative solutions if possible to avoid stack overflow issues.</p>
+
+<h2>Technical Details</h2>
+
+<p>The stack overflow was first detected at 00:00:08.567, followed by a hard fault at 00:00:08.789. The stack pointer was corrupted (0x20000100), and an invalid stack access was attempted at 0x200000F8. The hard fault was forced (HFSR: 0x40000000), indicating a serious system error.</p>
+
+<h2>Log Analysis</h2>
+
+<ul>
+<li><strong>Total Lines:</strong> 67</li>
+<li><strong>Events Detected:</strong> 4</li>
+</ul>
+
+<h3>Detected Events</h3>
+
+<ul>
+<li><strong>Hard Fault:</strong> 2 occurrence(s)</li>
+<li><strong>Panic:</strong> 1 occurrence(s)</li>
+<li><strong>Stack Overflow:</strong> 1 occurrence(s)</li>
+</ul>
+
+<h3>Event Details</h3>
+
+<h4>Event 1: Panic</h4>
+
+<ul>
+<li><strong>Line:</strong> 34</li>
+<li><strong>Timestamp:</strong> 00:00:08.567</li>
+</ul>
+
+<p><strong>Message:</strong></p>
+
+<pre><code>[00:00:08.567] PANIC: Stack overflow detected!
+</code></pre>
+
+<p><strong>Stack Trace:</strong></p>
+
+<pre><code>[00:00:01.890] INFO: Loading application from 0x08000000
+</code></pre>
+
+<h4>Event 2: Hard Fault</h4>
+
+<ul>
+<li><strong>Line:</strong> 35</li>
+<li><strong>Timestamp:</strong> 00:00:08.789</li>
+<li><strong>Address:</strong> 0x080034A2</li>
+</ul>
+
+<p><strong>Message:</strong></p>
+
+<pre><code>[00:00:08.789] FATAL: Hard fault at PC=0x080034A2
+</code></pre>
+
+<p><strong>Stack Trace:</strong></p>
+
+<pre><code>[00:00:08.891] FAULT: Stack pointer: 0x20000100 (corrupted)
+[00:00:08.892] FAULT: Frame pointer: 0x200001FC
+</code></pre>
+
+<h4>Event 3: Stack Overflow</h4>
+
+<ul>
+<li><strong>Line:</strong> 39</li>
+<li><strong>Timestamp:</strong> 00:00:08.893</li>
+<li><strong>Address:</strong> 0x00000082</li>
+</ul>
+
+<p><strong>Message:</strong></p>
+
+<pre><code>[00:00:08.893] FAULT: CFSR: 0x00000082 (Stack overflow)
+</code></pre>
+
+<h4>Event 4: Hard Fault</h4>
+
+<ul>
+<li><strong>Line:</strong> 40</li>
+<li><strong>Timestamp:</strong> 00:00:08.894</li>
+<li><strong>Address:</strong> 0x40000000</li>
+</ul>
+
+<p><strong>Message:</strong></p>
+
+<pre><code>[00:00:08.894] FAULT: HFSR: 0x40000000 (Forced hard fault)
+</code></pre>
+
+<p><strong>Stack Trace:</strong></p>
+
+<pre><code>[00:00:08.895] FAULT: BFAR: 0x200000F8 (invalid stack access)
+[00:00:08.897] STACK_TRACE:   #0  0x080034A2 in recursive_data_process() at data_processing.c:156
+[00:00:08.898] STACK_TRACE:   #1  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.899] STACK_TRACE:   #2  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.900] STACK_TRACE:   #3  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.901] STACK_TRACE:   #4  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.902] STACK_TRACE:   #5  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.903] STACK_TRACE:   #6  0x08003456 in process_sensor_data() at data_processing.c:89
+[00:00:08.904] STACK_TRACE:   #7  0x08003234 in sensor_task() at sensors.c:234
+[00:00:08.905] STACK_TRACE:   #8  0x08002100 in task_scheduler() at scheduler.c:112
+[00:00:08.906] STACK_TRACE:   #9  0x08001000 in main() at main.c:45
+[00:00:08.909] FAULT:   Code: 0x08000000 - 0x080FFFFF (1MB Flash)
+[00:00:08.910] FAULT:   Data: 0x20000000 - 0x2002FFFF (192KB RAM)
+[00:00:08.911] FAULT:   Stack: 0x20028000 - 0x2002FFFF (32KB)
+[00:00:08.913] FAULT:   R0=0x12345678  R1=0x9ABCDEF0  R2=0x11223344  R3=0x55667788
+[00:00:08.914] FAULT:   R4=0x99AABBCC  R5=0xDDEEFF00  R6=0x13579BDF  R7=0x2468ACE0
+[00:00:08.915] FAULT:   R8=0xFEDCBA98  R9=0x76543210  R10=0x0F0F0F0F R11=0xF0F0F0F0
+[00:00:08.916] FAULT:   R12=0xAAAABBBB SP=0x20000100  LR=0x080034C1  PC=0x080034A2
+[00:00:08.917] FAULT:   xPSR=0x21000000
+</code></pre>
+
+<h2>Related Event Types</h2>
+
+<ul>
+<li>Panic</li>
+<li>Hard Fault</li>
+<li>Stack Overflow</li>
+</ul>
+
+<h2>Metadata</h2>
+
+<ul>
+<li><strong>Parsed At:</strong> 2025-05-29T17:04:17.046487</li>
+<li><strong>Total Lines:</strong> 67</li>
+</ul>
+
+<hr />
+
+<p><em>Report generated by MCP Firmware Log Analysis Server</em></p>
+
         </div>
         
         <div class="footer">
-            <p>📊 Analysis powered by GPT-4 • 🔧 MCP Firmware Analysis Server v1.0.0</p>
-            <p>Report ID: fa8c2e1d-4b9f-4d12-8a3c-7e9f1a2b3c4d</p>
+            <p>Report generated by MCP Firmware Log Analysis Server</p>
         </div>
     </div>
 </body>
-</html> 
+</html>

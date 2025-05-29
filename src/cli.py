@@ -115,7 +115,7 @@ class FirmwareLogCLI:
         # Output to file or display
         if output_format == "json":
             import json
-            output_content = result.json(indent=2)
+            output_content = result.model_dump_json(indent=2)
         elif output_format == "html":
             output_content = self.analysis_service.report_generator.generate_html_report(
                 analysis, result.parsed_log, result.symbol_resolutions, result.analysis_id

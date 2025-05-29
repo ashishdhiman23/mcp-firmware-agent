@@ -1,0 +1,82 @@
+{
+  "analysis_id": "c316c8ed",
+  "timestamp": "2025-05-29T17:01:28.553699",
+  "analysis_result": {
+    "summary": "The system experienced a hard fault likely due to repeated I2C errors when reading from a sensor at address 0x48. This may indicate a hardware issue with the sensor or a problem with the I2C communication.",
+    "suggested_fix": "Check the sensor at address 0x48 for any physical damage or connection issues. If the sensor is fine, investigate the I2C communication. This could involve checking the I2C bus, the pull-up resistors, or the firmware's I2C driver.",
+    "confidence_score": 0.9,
+    "likely_module": "sensor_driver.c or i2c_driver.c",
+    "criticality_level": "high",
+    "technical_details": "The system halted due to a hard fault, which is a serious issue. The fault handler was triggered at PC: 0x08001234 and LR: 0x08005678. The PSR was 0x21000000 at the time of the fault.",
+    "related_events": [
+      "sensor_failure",
+      "hard_fault"
+    ]
+  },
+  "parsed_log": {
+    "total_lines": 26,
+    "events": [
+      {
+        "timestamp": "00:00:02.234",
+        "event_type": "sensor_failure",
+        "message": "[00:00:02.234] ERROR: I2C error reading sensor at address 0x48",
+        "line_number": 9,
+        "raw_line": "[00:00:02.234] ERROR: I2C error reading sensor at address 0x48",
+        "stack_trace": null,
+        "memory_address": null,
+        "function_name": null,
+        "file_name": null
+      },
+      {
+        "timestamp": "00:00:02.890",
+        "event_type": "sensor_failure",
+        "message": "[00:00:02.890] ERROR: I2C error reading sensor at address 0x48",
+        "line_number": 11,
+        "raw_line": "[00:00:02.890] ERROR: I2C error reading sensor at address 0x48",
+        "stack_trace": null,
+        "memory_address": null,
+        "function_name": null,
+        "file_name": null
+      },
+      {
+        "timestamp": "00:00:06.345",
+        "event_type": "hard_fault",
+        "message": "[00:00:06.345] ERROR: HardFault_Handler triggered",
+        "line_number": 16,
+        "raw_line": "[00:00:06.345] ERROR: HardFault_Handler triggered",
+        "stack_trace": [
+          "[00:00:06.346] ERROR: PC: 0x08001234",
+          "[00:00:06.347] ERROR: LR: 0x08005678",
+          "[00:00:06.348] ERROR: PSR: 0x21000000",
+          "[00:00:06.350] ERROR: #0 0x08001234 in sensor_read()",
+          "[00:00:06.351] ERROR: #1 0x08005678 in process_sensor_data()",
+          "[00:00:06.352] ERROR: #2 0x08009abc in main_loop()",
+          "[00:00:06.353] ERROR: #3 0x0800def0 in main()"
+        ],
+        "memory_address": null,
+        "function_name": null,
+        "file_name": null
+      },
+      {
+        "timestamp": "00:00:06.354",
+        "event_type": "hard_fault",
+        "message": "[00:00:06.354] FATAL: System halted due to hard fault",
+        "line_number": 25,
+        "raw_line": "[00:00:06.354] FATAL: System halted due to hard fault",
+        "stack_trace": null,
+        "memory_address": null,
+        "function_name": null,
+        "file_name": null
+      }
+    ],
+    "metadata": {
+      "parsed_at": "2025-05-29T17:01:19.239901",
+      "total_lines": 26
+    },
+    "parsing_errors": []
+  },
+  "symbol_resolutions": [],
+  "report_url": "/reports/analysis_c316c8ed_20250529_170128.html",
+  "markdown_report": "# Firmware Log Analysis Report\n\n**Generated:** 2025-05-29 17:01:28\n**Analysis ID:** c316c8ed\n\n## Executive Summary\n\n**Criticality:** HIGH\n**Confidence:** 90.0%\n**Likely Module:** sensor_driver.c or i2c_driver.c\n\nThe system experienced a hard fault likely due to repeated I2C errors when reading from a sensor at address 0x48. This may indicate a hardware issue with the sensor or a problem with the I2C communication.\n\n## Recommended Actions\n\nCheck the sensor at address 0x48 for any physical damage or connection issues. If the sensor is fine, investigate the I2C communication. This could involve checking the I2C bus, the pull-up resistors, or the firmware's I2C driver.\n\n## Technical Details\n\nThe system halted due to a hard fault, which is a serious issue. The fault handler was triggered at PC: 0x08001234 and LR: 0x08005678. The PSR was 0x21000000 at the time of the fault.\n\n## Log Analysis\n\n- **Total Lines:** 26\n- **Events Detected:** 4\n\n### Detected Events\n\n- **Hard Fault:** 2 occurrence(s)\n- **Sensor Failure:** 2 occurrence(s)\n\n### Event Details\n\n#### Event 1: Sensor Failure\n\n- **Line:** 9\n- **Timestamp:** 00:00:02.234\n\n**Message:**\n```\n[00:00:02.234] ERROR: I2C error reading sensor at address 0x48\n```\n\n#### Event 2: Sensor Failure\n\n- **Line:** 11\n- **Timestamp:** 00:00:02.890\n\n**Message:**\n```\n[00:00:02.890] ERROR: I2C error reading sensor at address 0x48\n```\n\n#### Event 3: Hard Fault\n\n- **Line:** 16\n- **Timestamp:** 00:00:06.345\n\n**Message:**\n```\n[00:00:06.345] ERROR: HardFault_Handler triggered\n```\n\n**Stack Trace:**\n```\n[00:00:06.346] ERROR: PC: 0x08001234\n[00:00:06.347] ERROR: LR: 0x08005678\n[00:00:06.348] ERROR: PSR: 0x21000000\n[00:00:06.350] ERROR: #0 0x08001234 in sensor_read()\n[00:00:06.351] ERROR: #1 0x08005678 in process_sensor_data()\n[00:00:06.352] ERROR: #2 0x08009abc in main_loop()\n[00:00:06.353] ERROR: #3 0x0800def0 in main()\n```\n\n#### Event 4: Hard Fault\n\n- **Line:** 25\n- **Timestamp:** 00:00:06.354\n\n**Message:**\n```\n[00:00:06.354] FATAL: System halted due to hard fault\n```\n\n## Related Event Types\n\n- Sensor Failure\n- Hard Fault\n\n## Metadata\n\n- **Parsed At:** 2025-05-29T17:01:19.239901\n- **Total Lines:** 26\n\n---\n*Report generated by MCP Firmware Log Analysis Server*",
+  "processing_time_ms": 9313.841819763184
+}
