@@ -53,7 +53,7 @@ An intelligent, AI-powered firmware log analysis system built with GPT-4 integra
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/mcp-firmware-agent.git
+git clone https://github.com/ashishdhiman23/mcp-firmware-agent.git
 cd mcp-firmware-agent
 ```
 
@@ -361,9 +361,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [GitHub Wiki](https://github.com/yourusername/mcp-firmware-agent/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/mcp-firmware-agent/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/mcp-firmware-agent/discussions)
+- **Documentation**: [GitHub Wiki](https://github.com/ashishdhiman23/mcp-firmware-agent/wiki)
+- **Issues**: [GitHub Issues](https://github.com/ashishdhiman23/mcp-firmware-agent/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ashishdhiman23/mcp-firmware-agent/discussions)
 
 ---
 

@@ -13,7 +13,7 @@ Thank you for your interest in contributing to the MCP Firmware Agent! This docu
 
 1. **Fork and clone the repository**
 ```bash
-git clone https://github.com/yourusername/mcp-firmware-agent.git
+git clone https://github.com/ashishdhiman23/mcp-firmware-agent.git
 cd mcp-firmware-agent
 ```
 
