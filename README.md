@@ -70,6 +70,10 @@ echo "OPENAI_API_KEY=your_openai_api_key_here" > .env
 
 4. **Start the server**
 ```bash
+# Easy method (recommended)
+python run_server.py
+
+# Or using uvicorn directly
 python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000
 ```
 
