@@ -57,6 +57,8 @@ coverage.xml
 
 # Django stuff:
 *.log
+# Exception: Allow test log files
+!test_logs/*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -151,6 +153,7 @@ reports/*.md
 ehthumbs.db
 Thumbs.db
 
-# Logs
+# Logs (but allow test_logs)
 logs/
-*.log 
+*.log
+!test_logs/*.log 

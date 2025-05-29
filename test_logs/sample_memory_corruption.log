@@ -1,0 +1,63 @@
+[00:00:01.000] INFO: System initialized successfully
+[00:00:01.001] INFO: Heap start: 0x20008000, size: 32768 bytes
+[00:00:01.002] INFO: Memory allocator: FreeRTOS heap_4
+[00:00:01.100] INFO: Starting data processing task
+[00:00:01.200] DEBUG: Allocating buffer: 512 bytes at 0x20008100
+[00:00:01.300] DEBUG: Allocating buffer: 1024 bytes at 0x20008300
+[00:00:01.400] DEBUG: Allocating buffer: 256 bytes at 0x20008700
+[00:00:01.500] INFO: Memory usage: 1792/32768 bytes (5.5%)
+[00:00:02.000] DEBUG: Processing data packet #1
+[00:00:02.100] DEBUG: Buffer overflow detected in packet_handler()
+[00:00:02.101] WARNING: Writing beyond buffer boundary
+[00:00:02.102] WARNING: Buffer: 0x20008100, size: 512, write at offset: 516
+[00:00:02.200] DEBUG: Processing data packet #2
+[00:00:02.300] DEBUG: Allocating buffer: 2048 bytes at 0x20008800
+[00:00:02.400] DEBUG: Freeing buffer at 0x20008300
+[00:00:02.500] ERROR: Double free detected!
+[00:00:02.501] ERROR: Attempting to free already freed pointer: 0x20008300
+[00:00:02.502] ERROR: Heap corruption possible
+[00:00:03.000] DEBUG: Allocating buffer: 128 bytes at 0x20009000
+[00:00:03.100] DEBUG: Memory usage: 2688/32768 bytes (8.2%)
+[00:00:03.200] WARNING: Heap fragmentation detected
+[00:00:03.300] DEBUG: Processing data packet #3
+[00:00:04.000] ERROR: Wild pointer access detected!
+[00:00:04.001] ERROR: Accessing memory at 0x12345678 (invalid address)
+[00:00:04.002] ERROR: PC: 0x08002A34 in data_parser() at parser.c:156
+[00:00:04.100] DEBUG: Allocating buffer: 4096 bytes
+[00:00:04.101] ERROR: malloc() failed - out of memory
+[00:00:04.102] ERROR: Available heap: 26,144 bytes, requested: 4096 bytes
+[00:00:04.103] ERROR: Fragmentation preventing allocation
+[00:00:05.000] WARNING: Memory leak detected
+[00:00:05.001] WARNING: 12 allocations not freed (3072 bytes leaked)
+[00:00:05.002] WARNING: Largest block: 2048 bytes at 0x20008800
+[00:00:05.100] DEBUG: Heap walk started
+[00:00:05.101] DEBUG: Block 0x20008100: 512 bytes, allocated
+[00:00:05.102] DEBUG: Block 0x20008300: CORRUPTED HEADER
+[00:00:05.103] ERROR: Heap corruption at 0x20008300
+[00:00:05.104] ERROR: Expected magic: 0xDEADBEEF, found: 0x12345678
+[00:00:05.105] ERROR: Previous block pointer invalid
+[00:00:05.200] PANIC: Critical memory corruption detected
+[00:00:05.201] PANIC: System integrity compromised
+[00:00:05.202] FAULT: Memory fault at 0x08002A34
+[00:00:05.203] FAULT: Fault type: Data abort (precise)
+[00:00:05.204] FAULT: DFSR: 0x00000005 (Translation fault, level 1)
+[00:00:05.205] FAULT: DFAR: 0x12345678 (invalid virtual address)
+[00:00:05.300] HEAP_DUMP: Heap state dump:
+[00:00:05.301] HEAP_DUMP: Total size: 32768 bytes
+[00:00:05.302] HEAP_DUMP: Allocated: 6144 bytes (18.8%)
+[00:00:05.303] HEAP_DUMP: Free: 26624 bytes (81.2%)
+[00:00:05.304] HEAP_DUMP: Largest free block: 24576 bytes
+[00:00:05.305] HEAP_DUMP: Free blocks: 7
+[00:00:05.306] HEAP_DUMP: Minimum free size seen: 22528 bytes
+[00:00:05.400] STACK_TRACE: Call stack:
+[00:00:05.401] STACK_TRACE:   #0  0x08002A34 in data_parser() at parser.c:156
+[00:00:05.402] STACK_TRACE:   #1  0x08002890 in process_packet() at network.c:234
+[00:00:05.403] STACK_TRACE:   #2  0x08002456 in network_task() at tasks.c:89
+[00:00:05.404] STACK_TRACE:   #3  0x08001234 in vTaskCode() at FreeRTOS/tasks.c:3456
+[00:00:05.500] SYSTEM: Emergency heap cleanup initiated
+[00:00:05.501] SYSTEM: Attempting to salvage valid memory blocks
+[00:00:05.502] SYSTEM: 8 blocks recovered, 2048 bytes
+[00:00:05.503] SYSTEM: Heap reset required
+[00:00:05.600] FATAL: System restart required due to memory corruption
+[00:00:05.601] FATAL: Saving diagnostic data to backup memory
+[00:00:05.602] SYSTEM: Reset initiated... 

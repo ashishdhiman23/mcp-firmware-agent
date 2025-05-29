@@ -30,7 +30,7 @@ An intelligent, AI-powered firmware log analysis system built with GPT-4 integra
 - **Boot Sequence Analysis**: Startup and initialization issue detection
 
 ### 📊 Rich Reporting
-- **HTML Reports**: Beautiful, styled analysis reports
+- **HTML Reports**: Beautiful, styled analysis reports with interactive elements
 - **JSON API**: Structured data for integration
 - **Markdown Export**: Documentation-ready format
 - **Event Timelines**: Visual event correlation
@@ -41,6 +41,31 @@ An intelligent, AI-powered firmware log analysis system built with GPT-4 integra
 - **REST API**: Programmatic integration endpoints
 - **CLI Tool**: Command-line analysis for automation
 - **Batch Processing**: Multiple file analysis support
+
+## 📁 Live Demo & Sample Reports
+
+### 🧪 Comprehensive Test Logs
+Explore our realistic test scenarios in `/test_logs/`:
+- **`sample_crash.log`** - Hard fault with I2C sensor failure
+- **`sample_watchdog.log`** - Watchdog reset with sensor timeout
+- **`sample_json.log`** - JSON format assertion failure
+- **`sample_stack_overflow.log`** - Recursive function stack overflow (NEW!)
+- **`sample_boot_failure.log`** - I2C bus stuck during system initialization (NEW!)
+- **`sample_memory_corruption.log`** - Heap corruption with buffer overflows (NEW!)
+
+### 📊 Professional Analysis Reports
+See AI-powered analysis in action in `/sample_reports/`:
+- **`stack_overflow_analysis.html`** - Interactive HTML report with rich styling and metrics
+- **`memory_corruption_analysis.md`** - Comprehensive Markdown technical documentation  
+- **`boot_failure_analysis.json`** - Structured JSON for API integration
+
+**Key Report Features:**
+- 🎯 **95% AI Confidence** with GPT-4 analysis
+- 📈 **Visual Metrics** showing stack usage, memory corruption patterns
+- 🔍 **Root Cause Analysis** with specific file/function identification
+- 💡 **Code Fixes** showing before/after safe implementations
+- 🛡️ **Prevention Strategies** with tool recommendations
+- ⚡ **Immediate Actions** with prioritized troubleshooting steps
 
 ## 🚀 Quick Start
 
@@ -160,60 +185,63 @@ Check server health and configuration status.
 }
 ```
 
-## 🔍 Supported Log Formats
+## 🔍 Supported Log Formats & Issue Types
 
-### Traditional Logs
-```
+### Log Format Examples
+```bash
+# Traditional firmware logs
 [00:00:01.123] INFO: System startup complete
 [00:00:02.234] ERROR: I2C error reading sensor at address 0x48
 [00:00:02.235] PANIC: Hard fault detected
+
+# Stack overflow with detailed trace
+[00:00:08.567] PANIC: Stack overflow detected!
+[00:00:08.789] FATAL: Hard fault at PC=0x080034A2
+[00:00:08.897] STACK_TRACE:   #0  0x080034A2 in recursive_data_process()
+
+# Memory corruption events
+[00:00:02.500] ERROR: Double free detected!
+[00:00:04.000] ERROR: Wild pointer access at 0x12345678
+[00:00:05.103] ERROR: Heap corruption at 0x20008300
+
+# Boot sequence failures
+[00:00:00.303] ERROR: I2C1 bus stuck! SDA line low
+[00:00:00.452] ERROR: SPI Flash timeout! No response
 ```
 
-### JSON Logs
-```json
-{
-  "timestamp": "00:00:02.234",
-  "level": "ERROR",
-  "message": "Assertion failed",
-  "file": "sensor_init.c",
-  "line": 45,
-  "function": "sensor_init"
-}
-```
-
-### Stack Traces
-```
-Stack trace:
-  0x08001000 in main()
-  0x08002000 in sensor_init()
-  0x08003000 in i2c_read()
-```
+### Detected Issue Types
+- **Stack Overflow** - Recursive function calls, excessive local variables
+- **Memory Corruption** - Buffer overflows, double free, wild pointers, heap corruption
+- **Boot Failures** - Peripheral initialization, clock failures, I2C bus issues
+- **Hardware Faults** - Bus faults, external device timeouts, electrical issues
+- **Sensor Issues** - Communication failures, calibration problems, timeout errors
+- **Watchdog Resets** - Task blocking, infinite loops, system unresponsiveness
 
 ## 🧠 AI Analysis Examples
 
-### Hard Fault Analysis
+### Stack Overflow Analysis (95% Confidence)
 **GPT-4 Analysis:**
-- **Summary**: Hard fault due to repeated I2C sensor failures  
-- **Root Cause**: Sensor at I2C address 0x48 becoming unresponsive
-- **Recommendation**: Check sensor hardware, verify I2C bus integrity
-- **Module**: `sensor_driver.c`
-- **Confidence**: 90%
+- **Root Cause**: Uncontrolled recursive calls in `recursive_data_process()`
+- **Stack Usage**: 7680/8192 bytes (93.7% utilization)
+- **Fault Location**: `data_processing.c:156`
+- **Fix**: Add recursion depth limiting and iterative algorithm
+- **Prevention**: Stack monitoring, static analysis, unit testing
 
-### Watchdog Reset Analysis  
+### Memory Corruption Analysis (92% Confidence)  
 **GPT-4 Analysis:**
-- **Summary**: System became unresponsive, likely infinite loop
-- **Root Cause**: Blocking operation preventing watchdog refresh
-- **Recommendation**: Add watchdog refresh points, review timeout values
-- **Technical Details**: Watchdog reset mechanism explanation
-- **Confidence**: 85%
+- **Issues**: Buffer overflow + double free + wild pointer access
+- **Heap State**: 6144 bytes allocated, 3072 bytes leaked
+- **Corruption**: Header magic corrupted (0xDEADBEEF → 0x12345678)
+- **Fix**: Bounds checking, safe memory wrappers, pointer validation
+- **Prevention**: AddressSanitizer, heap debugging, static analysis
 
-### Assertion Failure Analysis
+### Boot Failure Analysis (89% Confidence)
 **GPT-4 Analysis:**
-- **Summary**: Assertion failure in sensor initialization
-- **Root Cause**: Precondition not met in `sensor_init()` at line 45
-- **Recommendation**: Review assertion condition, check initialization sequence
-- **Module**: `sensor_init.c`  
-- **Confidence**: 95%
+- **Primary**: I2C bus stuck (SDA line low)
+- **Secondary**: HSE crystal failure, external flash timeout
+- **Impact**: System in degraded mode with limited functionality
+- **Fix**: I2C bus recovery, hardware inspection, fallback mechanisms
+- **Prevention**: Bus monitoring, graceful degradation, robust initialization
 
 ## 🛠️ Configuration
 
@@ -260,11 +288,18 @@ mcp_firmware_agent/
 │   ├── models.py           # Pydantic data models
 │   ├── config.py           # Configuration management
 │   └── cli.py              # Command-line interface
-├── test_logs/              # Sample log files
+├── test_logs/              # Comprehensive test scenarios
 │   ├── sample_crash.log    # Hard fault example
 │   ├── sample_watchdog.log # Watchdog reset example
-│   └── sample_json.log     # JSON format example
-├── tests/                  # Unit and integration tests
+│   ├── sample_json.log     # JSON format example
+│   ├── sample_stack_overflow.log    # Recursive function overflow ✨
+│   ├── sample_boot_failure.log      # I2C initialization failure ✨
+│   └── sample_memory_corruption.log # Heap corruption analysis ✨
+├── sample_reports/         # Professional AI analysis reports ✨
+│   ├── stack_overflow_analysis.html      # Interactive HTML report
+│   ├── memory_corruption_analysis.md     # Technical documentation
+│   ├── boot_failure_analysis.json        # Structured API response
+│   └── README.md                         # Report showcase guide
 ├── templates/              # HTML report templates
 ├── reports/                # Generated analysis reports
 ├── requirements.txt        # Python dependencies
@@ -289,12 +324,20 @@ pytest tests/integration/
 pytest --cov=src tests/
 ```
 
-### Sample Log Analysis
+### Comprehensive Sample Analysis
 ```bash
-# Test with provided samples
+# Test all issue types
 python -m src.cli analyze test_logs/sample_crash.log
 python -m src.cli analyze test_logs/sample_watchdog.log  
 python -m src.cli analyze test_logs/sample_json.log
+python -m src.cli analyze test_logs/sample_stack_overflow.log     # Stack analysis
+python -m src.cli analyze test_logs/sample_memory_corruption.log  # Memory debugging
+python -m src.cli analyze test_logs/sample_boot_failure.log       # Hardware issues
+
+# Generate reports in different formats
+python -m src.cli analyze test_logs/sample_stack_overflow.log --format html
+python -m src.cli analyze test_logs/sample_memory_corruption.log --format markdown
+python -m src.cli analyze test_logs/sample_boot_failure.log --format json
 ```
 
 ## 🔧 Development

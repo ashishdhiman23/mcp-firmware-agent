@@ -1,0 +1,26 @@
+[00:00:00.000] INFO: System boot started
+[00:00:00.123] INFO: Initializing peripherals...
+[00:00:00.456] INFO: UART initialized
+[00:00:00.789] INFO: I2C initialized
+[00:00:01.012] INFO: SPI initialized
+[00:00:01.345] INFO: GPIO configured
+[00:00:01.678] INFO: Starting main application loop
+[00:00:02.001] INFO: Sensor initialization started
+[00:00:02.234] ERROR: I2C error reading sensor at address 0x48
+[00:00:02.567] WARN: Retrying sensor initialization...
+[00:00:02.890] ERROR: I2C error reading sensor at address 0x48
+[00:00:03.123] ERROR: Sensor initialization failed
+[00:00:03.456] INFO: Continuing without sensor data
+[00:00:05.789] INFO: Main loop iteration 1
+[00:00:06.012] INFO: Processing data...
+[00:00:06.345] ERROR: HardFault_Handler triggered
+[00:00:06.346] ERROR: PC: 0x08001234
+[00:00:06.347] ERROR: LR: 0x08005678
+[00:00:06.348] ERROR: PSR: 0x21000000
+[00:00:06.349] ERROR: Stack trace:
+[00:00:06.350] ERROR: #0 0x08001234 in sensor_read()
+[00:00:06.351] ERROR: #1 0x08005678 in process_sensor_data()
+[00:00:06.352] ERROR: #2 0x08009abc in main_loop()
+[00:00:06.353] ERROR: #3 0x0800def0 in main()
+[00:00:06.354] FATAL: System halted due to hard fault
+[00:00:06.355] FATAL: Reset required 

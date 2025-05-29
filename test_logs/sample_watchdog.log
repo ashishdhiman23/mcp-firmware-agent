@@ -1,0 +1,17 @@
+[12:34:56.000] INFO: System boot started
+[12:34:56.123] INFO: Watchdog timer initialized (timeout: 5000ms)
+[12:34:56.456] INFO: Starting main application
+[12:34:57.000] INFO: Main loop started
+[12:34:58.000] INFO: Feeding watchdog
+[12:34:59.000] INFO: Processing sensor data
+[12:35:00.000] INFO: Feeding watchdog
+[12:35:01.000] INFO: Network communication started
+[12:35:02.000] INFO: Feeding watchdog
+[12:35:03.000] WARN: Network timeout, retrying...
+[12:35:04.000] ERROR: Network communication failed
+[12:35:05.000] WARN: Entering error handling routine
+[12:35:06.000] ERROR: Error handling taking too long
+[12:35:07.000] ERROR: Missed watchdog feed deadline
+[12:35:08.000] FATAL: Watchdog Reset triggered
+[12:35:08.001] INFO: Reset cause: IWDG Reset
+[12:35:08.002] INFO: System restarting... 

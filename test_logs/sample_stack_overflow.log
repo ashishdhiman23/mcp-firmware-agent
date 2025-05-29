@@ -1,0 +1,67 @@
+[00:00:01.234] INFO: System boot sequence initiated
+[00:00:01.456] INFO: CPU: ARM Cortex-M4 @ 168MHz
+[00:00:01.678] INFO: RAM: 192KB, FLASH: 1MB
+[00:00:01.890] INFO: Loading application from 0x08000000
+[00:00:02.123] INFO: Initializing peripherals...
+[00:00:02.345] INFO: UART1 initialized @ 115200 bps
+[00:00:02.567] INFO: I2C1 initialized @ 400kHz
+[00:00:02.789] INFO: SPI1 initialized @ 42MHz
+[00:00:03.012] INFO: ADC1 initialized, 12-bit resolution
+[00:00:03.234] INFO: Timer2 configured for 1ms tick
+[00:00:03.456] INFO: System ready, starting main application
+[00:00:03.678] INFO: Sensor calibration started
+[00:00:03.890] INFO: Temperature sensor: 24.5°C
+[00:00:04.123] INFO: Humidity sensor: 45.2%
+[00:00:04.345] INFO: Pressure sensor: 1013.25 hPa
+[00:00:04.567] INFO: Accelerometer: X=0.01g, Y=0.02g, Z=0.98g
+[00:00:04.789] INFO: Entering main control loop
+[00:00:05.012] DEBUG: Stack usage: 512 bytes used of 8192 bytes
+[00:00:05.234] DEBUG: Processing sensor data...
+[00:00:05.456] INFO: Data collection started
+[00:00:05.678] DEBUG: Recursive function call depth: 10
+[00:00:05.890] DEBUG: Recursive function call depth: 20
+[00:00:06.123] DEBUG: Recursive function call depth: 50
+[00:00:06.345] DEBUG: Recursive function call depth: 100
+[00:00:06.567] WARNING: Stack usage: 2048 bytes used of 8192 bytes
+[00:00:06.789] DEBUG: Recursive function call depth: 200
+[00:00:07.012] DEBUG: Recursive function call depth: 300
+[00:00:07.234] WARNING: Stack usage: 4096 bytes used of 8192 bytes
+[00:00:07.456] DEBUG: Recursive function call depth: 400
+[00:00:07.678] ERROR: Stack usage: 6144 bytes used of 8192 bytes
+[00:00:07.890] DEBUG: Recursive function call depth: 500
+[00:00:08.123] CRITICAL: Stack usage: 7680 bytes used of 8192 bytes
+[00:00:08.345] DEBUG: Recursive function call depth: 600
+[00:00:08.567] PANIC: Stack overflow detected!
+[00:00:08.789] FATAL: Hard fault at PC=0x080034A2
+[00:00:08.890] FAULT: Exception occurred in data_processing_task()
+[00:00:08.891] FAULT: Stack pointer: 0x20000100 (corrupted)
+[00:00:08.892] FAULT: Frame pointer: 0x200001FC
+[00:00:08.893] FAULT: CFSR: 0x00000082 (Stack overflow)
+[00:00:08.894] FAULT: HFSR: 0x40000000 (Forced hard fault)
+[00:00:08.895] FAULT: BFAR: 0x200000F8 (invalid stack access)
+[00:00:08.896] STACK_TRACE: Stack trace:
+[00:00:08.897] STACK_TRACE:   #0  0x080034A2 in recursive_data_process() at data_processing.c:156
+[00:00:08.898] STACK_TRACE:   #1  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.899] STACK_TRACE:   #2  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.900] STACK_TRACE:   #3  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.901] STACK_TRACE:   #4  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.902] STACK_TRACE:   #5  0x080034B8 in recursive_data_process() at data_processing.c:158
+[00:00:08.903] STACK_TRACE:   #6  0x08003456 in process_sensor_data() at data_processing.c:89
+[00:00:08.904] STACK_TRACE:   #7  0x08003234 in sensor_task() at sensors.c:234
+[00:00:08.905] STACK_TRACE:   #8  0x08002100 in task_scheduler() at scheduler.c:112
+[00:00:08.906] STACK_TRACE:   #9  0x08001000 in main() at main.c:45
+[00:00:08.907] FAULT: Task: data_processing_task (priority: 3)
+[00:00:08.908] FAULT: Memory regions:
+[00:00:08.909] FAULT:   Code: 0x08000000 - 0x080FFFFF (1MB Flash)
+[00:00:08.910] FAULT:   Data: 0x20000000 - 0x2002FFFF (192KB RAM)
+[00:00:08.911] FAULT:   Stack: 0x20028000 - 0x2002FFFF (32KB)
+[00:00:08.912] FAULT: CPU registers:
+[00:00:08.913] FAULT:   R0=0x12345678  R1=0x9ABCDEF0  R2=0x11223344  R3=0x55667788
+[00:00:08.914] FAULT:   R4=0x99AABBCC  R5=0xDDEEFF00  R6=0x13579BDF  R7=0x2468ACE0
+[00:00:08.915] FAULT:   R8=0xFEDCBA98  R9=0x76543210  R10=0x0F0F0F0F R11=0xF0F0F0F0
+[00:00:08.916] FAULT:   R12=0xAAAABBBB SP=0x20000100  LR=0x080034C1  PC=0x080034A2
+[00:00:08.917] FAULT:   xPSR=0x21000000
+[00:00:08.918] SYSTEM: Initiating emergency shutdown...
+[00:00:08.919] SYSTEM: Saving critical data to backup memory
+[00:00:08.920] SYSTEM: Watchdog timer disabled
+[00:00:08.921] SYSTEM: System reset initiated 

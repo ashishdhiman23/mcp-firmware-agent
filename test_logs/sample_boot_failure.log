@@ -1,0 +1,86 @@
+[00:00:00.000] BOOT: System startup initiated
+[00:00:00.001] BOOT: ROM version: v2.1.0 (Build: 20240315)
+[00:00:00.002] BOOT: CPU ID: 0x411FC271 (ARM Cortex-M4)
+[00:00:00.003] BOOT: Reset cause: External reset
+[00:00:00.010] BOOT: Checking flash integrity...
+[00:00:00.050] BOOT: Flash CRC: 0xA5B4C3D2 (Expected: 0xA5B4C3D2) ✓
+[00:00:00.051] BOOT: Application found at 0x08000000
+[00:00:00.052] BOOT: Loading vector table...
+[00:00:00.053] BOOT: Stack pointer: 0x20030000
+[00:00:00.054] BOOT: Reset handler: 0x08000189
+[00:00:00.055] BOOT: Jumping to application...
+[00:00:00.056] APP: Starting firmware v1.2.3
+[00:00:00.057] APP: Build date: Mar 15 2024 14:32:10
+[00:00:00.058] APP: Git commit: a1b2c3d4
+[00:00:00.100] INIT: Initializing system clocks...
+[00:00:00.101] INIT: HSE crystal: 8MHz
+[00:00:00.102] INIT: Configuring PLL for 168MHz...
+[00:00:00.103] ERROR: HSE startup timeout! Crystal not responding
+[00:00:00.104] INIT: Falling back to HSI (16MHz)
+[00:00:00.105] WARNING: System running at reduced speed
+[00:00:00.150] INIT: Configuring system memory...
+[00:00:00.151] INIT: SRAM1: 112KB at 0x20000000
+[00:00:00.152] INIT: SRAM2: 16KB at 0x2001C000
+[00:00:00.153] INIT: CCM RAM: 64KB at 0x10000000
+[00:00:00.200] INIT: Initializing GPIO ports...
+[00:00:00.201] INIT: GPIOA configured ✓
+[00:00:00.202] INIT: GPIOB configured ✓
+[00:00:00.203] INIT: GPIOC configured ✓
+[00:00:00.204] INIT: GPIOD configured ✓
+[00:00:00.250] INIT: Configuring UART1...
+[00:00:00.251] INIT: Baud rate: 115200, 8N1
+[00:00:00.252] INIT: TX pin: PA9, RX pin: PA10
+[00:00:00.253] INIT: UART1 ready ✓
+[00:00:00.300] INIT: Configuring I2C1...
+[00:00:00.301] INIT: Frequency: 400kHz
+[00:00:00.302] INIT: SDA: PB7, SCL: PB6
+[00:00:00.303] ERROR: I2C1 bus stuck! SDA line low
+[00:00:00.304] INIT: Attempting bus recovery...
+[00:00:00.305] INIT: Toggling SCL line 9 times...
+[00:00:00.315] ERROR: Bus recovery failed! SDA still low
+[00:00:00.316] INIT: I2C1 initialization failed ✗
+[00:00:00.350] INIT: Configuring SPI1...
+[00:00:00.351] INIT: Mode: Master, 8-bit, MSB first
+[00:00:00.352] INIT: Clock: 42MHz (PCLK2/2)
+[00:00:00.353] INIT: NSS: PA4, SCK: PA5, MISO: PA6, MOSI: PA7
+[00:00:00.354] INIT: SPI1 ready ✓
+[00:00:00.400] INIT: Configuring ADC1...
+[00:00:00.401] INIT: Resolution: 12-bit, align: right
+[00:00:00.402] INIT: Reference: VDD (3.3V)
+[00:00:00.403] INIT: ADC1 ready ✓
+[00:00:00.450] INIT: Initializing external flash...
+[00:00:00.451] INIT: SPI Flash ID request...
+[00:00:00.452] ERROR: SPI Flash timeout! No response
+[00:00:00.453] INIT: Retrying flash detection...
+[00:00:00.454] ERROR: SPI Flash still not responding
+[00:00:00.455] INIT: External storage unavailable ✗
+[00:00:00.500] INIT: Scanning I2C bus for devices...
+[00:00:00.501] ERROR: I2C bus not functional, skipping scan
+[00:00:00.550] INIT: Loading configuration from EEPROM...
+[00:00:00.551] ERROR: Cannot access EEPROM (I2C failure)
+[00:00:00.552] INIT: Loading default configuration
+[00:00:00.553] WARNING: Using factory defaults
+[00:00:00.600] INIT: Starting system tasks...
+[00:00:00.601] TASK: Creating main_task (priority: 5)
+[00:00:00.602] TASK: Creating sensor_task (priority: 3)
+[00:00:00.603] ERROR: sensor_task creation failed! (I2C unavailable)
+[00:00:00.604] TASK: Creating comm_task (priority: 4)
+[00:00:00.605] TASK: Creating watchdog_task (priority: 1)
+[00:00:00.650] INIT: System startup completed with errors
+[00:00:00.651] WARNING: System in degraded mode
+[00:00:00.652] WARNING: - I2C bus failure
+[00:00:00.653] WARNING: - External flash unavailable
+[00:00:00.654] WARNING: - Sensor subsystem offline
+[00:00:00.655] WARNING: - Configuration not loaded
+[00:00:00.700] MAIN: Entering main loop...
+[00:00:00.701] MAIN: System status: DEGRADED
+[00:00:01.000] MAIN: Attempting I2C recovery...
+[00:00:01.001] ERROR: I2C recovery failed
+[00:00:02.000] MAIN: Attempting I2C recovery...
+[00:00:02.001] ERROR: I2C recovery failed
+[00:00:03.000] MAIN: Attempting I2C recovery...
+[00:00:03.001] ERROR: I2C recovery failed
+[00:00:04.000] MAIN: Maximum recovery attempts reached
+[00:00:04.001] MAIN: System entering safe mode
+[00:00:04.002] SAFE: Disabling non-essential peripherals
+[00:00:04.003] SAFE: System operational with limited functionality 

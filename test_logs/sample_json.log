@@ -1,0 +1,35 @@
+[
+  {
+    "timestamp": "2023-12-01T10:30:00.000Z",
+    "level": "info",
+    "message": "System initialization started",
+    "module": "boot"
+  },
+  {
+    "timestamp": "2023-12-01T10:30:01.123Z",
+    "level": "info",
+    "message": "Memory test passed",
+    "module": "memory"
+  },
+  {
+    "timestamp": "2023-12-01T10:30:02.456Z",
+    "level": "error",
+    "message": "assert() failed in sensor_init.c:45",
+    "module": "sensor",
+    "function": "sensor_init",
+    "file": "sensor_init.c",
+    "line": 45
+  },
+  {
+    "timestamp": "2023-12-01T10:30:02.789Z",
+    "level": "fatal",
+    "message": "System panic: assertion failure",
+    "module": "kernel"
+  },
+  {
+    "timestamp": "2023-12-01T10:30:03.012Z",
+    "level": "error",
+    "message": "Stack trace: 0x08001000 -> 0x08002000 -> 0x08003000",
+    "module": "debug"
+  }
+] 
