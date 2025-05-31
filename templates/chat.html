@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firmware Chat Assistant - MCP Analysis Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+
+        .chat-header p {
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: #007bff;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e1e5e9;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.7em;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .suggestion {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border: 1px solid #bbdefb;
+            transition: all 0.2s;
+        }
+
+        .suggestion:hover {
+            background: #1565c0;
+            color: white;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .file-upload-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #dee2e6;
+        }
+
+        .file-input {
+            flex: 1;
+        }
+
+        .upload-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .upload-btn:hover {
+            background: #218838;
+        }
+
+        .chat-input-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .send-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            min-width: 80px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #0056b3;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid #e1e5e9;
+            max-width: 70%;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #6c757d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .session-info {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+            font-size: 0.9em;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .welcome-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 90vh;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🤖 Firmware Chat Assistant</h1>
+            <p>Ask questions about firmware debugging, crash analysis, and embedded systems</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <strong>Welcome to the Firmware Chat Assistant!</strong><br>
+                Start by uploading a firmware log file or ask general questions about embedded systems debugging.
+                <br><br>
+                <strong>Try asking:</strong> "How do I debug a stack overflow?" or "What causes watchdog resets?"
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="file-upload-area">
+                <input type="file" id="logFile" class="file-input" accept=".log,.txt,.json" placeholder="Upload firmware log file...">
+                <button onclick="uploadFile()" class="upload-btn">📁 Upload & Analyze</button>
+            </div>
+            
+            <form class="chat-input-form" onsubmit="sendMessage(event)">
+                <input type="text" id="messageInput" class="chat-input" placeholder="Ask about firmware debugging..." autocomplete="off">
+                <button type="submit" id="sendBtn" class="send-btn">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+        let isWaitingForResponse = false;
+
+        // Initialize chat session when page loads
+        window.addEventListener('load', initializeChat);
+
+        async function initializeChat() {
+            try {
+                const response = await fetch('/chat/sessions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    sessionId = data.session_id;
+                    addSessionInfo(`Chat session created: ${sessionId.substring(0, 8)}...`);
+                } else {
+                    throw new Error('Failed to create session');
+                }
+            } catch (error) {
+                addErrorMessage('Failed to initialize chat session. Please refresh the page.');
+                console.error('Session initialization error:', error);
+            }
+        }
+
+        async function sendMessage(event) {
+            event.preventDefault();
+            
+            if (!sessionId || isWaitingForResponse) return;
+
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            setWaitingState(true);
+
+            try {
+                const response = await fetch(`/chat/sessions/${sessionId}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        context_type: 'general'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Add AI response
+                    addMessage('assistant', data.response, data.suggestions);
+                } else {
+                    throw new Error(data.detail || 'Failed to send message');
+                }
+            } catch (error) {
+                addErrorMessage(`Error: ${error.message}`);
+                console.error('Send message error:', error);
+            } finally {
+                hideTypingIndicator();
+                setWaitingState(false);
+            }
+        }
+
+        async function uploadFile() {
+            if (!sessionId || isWaitingForResponse) return;
+
+            const fileInput = document.getElementById('logFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                addErrorMessage('Please select a file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('analyze_immediately', 'true');
+
+            addMessage('user', `📁 Uploading file: ${file.name}`);
+            showTypingIndicator();
+            setWaitingState(true);
+
+            try {
+                const response = await fetch(`/chat/sessions/${sessionId}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    addMessage('assistant', 
+                        `✅ File uploaded successfully!\n\n${data.auto_analysis_message || 'File analysis complete. You can now ask questions about this log file.'}`
+                    );
+                    fileInput.value = ''; // Clear the file input
+                } else {
+                    throw new Error(data.detail || 'Failed to upload file');
+                }
+            } catch (error) {
+                addErrorMessage(`Upload error: ${error.message}`);
+                console.error('Upload error:', error);
+            } finally {
+                hideTypingIndicator();
+                setWaitingState(false);
+            }
+        }
+
+        function addMessage(role, content, suggestions = []) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Format content (convert line breaks to HTML)
+            const formattedContent = content.replace(/\n/g, '<br>');
+            contentDiv.innerHTML = formattedContent;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString();
+            
+            contentDiv.appendChild(timeDiv);
+            messageDiv.appendChild(contentDiv);
+
+            // Add suggestions if this is an assistant message
+            if (role === 'assistant' && suggestions && suggestions.length > 0) {
+                const suggestionsDiv = document.createElement('div');
+                suggestionsDiv.className = 'suggestions';
+                
+                suggestions.forEach(suggestion => {
+                    const suggestionBtn = document.createElement('button');
+                    suggestionBtn.className = 'suggestion';
+                    suggestionBtn.textContent = suggestion;
+                    suggestionBtn.onclick = () => {
+                        document.getElementById('messageInput').value = suggestion;
+                        document.getElementById('messageInput').focus();
+                    };
+                    suggestionsDiv.appendChild(suggestionBtn);
+                });
+                
+                messageDiv.appendChild(suggestionsDiv);
+            }
+
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addSessionInfo(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'session-info';
+            infoDiv.textContent = message;
+            messagesContainer.appendChild(infoDiv);
+            scrollToBottom();
+        }
+
+        function addErrorMessage(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            messagesContainer.appendChild(errorDiv);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.id = 'typingIndicator';
+            
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'typing-indicator';
+            indicatorDiv.style.display = 'flex';
+            indicatorDiv.innerHTML = `
+                AI is thinking...
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            
+            typingDiv.appendChild(indicatorDiv);
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function setWaitingState(waiting) {
+            isWaitingForResponse = waiting;
+            const sendBtn = document.getElementById('sendBtn');
+            const messageInput = document.getElementById('messageInput');
+            
+            sendBtn.disabled = waiting;
+            messageInput.disabled = waiting;
+            sendBtn.textContent = waiting ? 'Thinking...' : 'Send';
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Enable Enter key to send messages
+        document.getElementById('messageInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage(event);
+            }
+        });
+    </script>
+</body>
+</html> 
