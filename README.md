@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/ashishdhiman23-mcp-firmware-agent-badge.png)](https://mseep.ai/app/ashishdhiman23-mcp-firmware-agent)
+
 # 🔧 MCP Firmware Log Analysis Server
 
 An intelligent, AI-powered firmware log analysis system built with GPT-4 integration for embedded systems debugging. This comprehensive tool helps firmware developers quickly identify, analyze, and resolve critical issues in embedded systems through automated log parsing and expert-level analysis.
